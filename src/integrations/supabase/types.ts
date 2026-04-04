@@ -14,16 +14,106 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          address: string | null
+          avatar_url: string | null
+          biometric_enabled: boolean
+          bvn_number: string | null
+          bvn_verified: boolean
+          created_at: string
+          date_of_birth: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          kyc_level: number
+          kyc_status: Database["public"]["Enums"]["kyc_status"]
+          nin_number: string | null
+          nin_verified: boolean
+          phone: string | null
+          pin_hash: string | null
+          selfie_verified: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          avatar_url?: string | null
+          biometric_enabled?: boolean
+          bvn_number?: string | null
+          bvn_verified?: boolean
+          created_at?: string
+          date_of_birth?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          kyc_level?: number
+          kyc_status?: Database["public"]["Enums"]["kyc_status"]
+          nin_number?: string | null
+          nin_verified?: boolean
+          phone?: string | null
+          pin_hash?: string | null
+          selfie_verified?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          avatar_url?: string | null
+          biometric_enabled?: boolean
+          bvn_number?: string | null
+          bvn_verified?: boolean
+          created_at?: string
+          date_of_birth?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          kyc_level?: number
+          kyc_status?: Database["public"]["Enums"]["kyc_status"]
+          nin_number?: string | null
+          nin_verified?: boolean
+          phone?: string | null
+          pin_hash?: string | null
+          selfie_verified?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      kyc_status: "pending" | "in_review" | "verified" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +240,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      kyc_status: ["pending", "in_review", "verified", "rejected"],
+    },
   },
 } as const
