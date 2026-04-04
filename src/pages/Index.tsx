@@ -1,16 +1,66 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import AppHeader from "@/components/AppHeader";
+import WalletCard from "@/components/WalletCard";
+import QuickActions from "@/components/QuickActions";
+import FXRateCard from "@/components/FXRateCard";
+import TransactionList from "@/components/TransactionList";
+import BottomNav from "@/components/BottomNav";
+import { motion } from "framer-motion";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen bg-background pb-24">
+      <div className="max-w-lg mx-auto px-4">
+        <AppHeader />
+
+        {/* Wallet Cards */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="mt-4"
+        >
+          <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
+            <div className="snap-center">
+              <WalletCard
+                currency="USD"
+                balance={3750.42}
+                symbol="$"
+                label="USD Wallet"
+                trend={{ value: 12.5, positive: true }}
+              />
+            </div>
+            <div className="snap-center">
+              <WalletCard
+                currency="NGN"
+                balance={1250000}
+                symbol="₦"
+                label="Naira Wallet"
+                trend={{ value: 3.2, positive: true }}
+              />
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Quick Actions */}
+        <section className="mt-6">
+          <h3 className="text-sm font-semibold font-display text-muted-foreground mb-3 uppercase tracking-wider">Quick Actions</h3>
+          <QuickActions />
+        </section>
+
+        {/* FX Rate */}
+        <section className="mt-6">
+          <FXRateCard />
+        </section>
+
+        {/* Transactions */}
+        <section className="mt-6">
+          <TransactionList />
+        </section>
+      </div>
+
+      <BottomNav />
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
