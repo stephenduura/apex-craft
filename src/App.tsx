@@ -16,6 +16,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import KYCVerification from "./pages/KYCVerification";
+import PinSetupPage from "./pages/PinSetupPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/kyc" element={<ProtectedRoute><KYCVerification /></ProtectedRoute>} />
+            <Route path="/pin-setup" element={<ProtectedRoute><PinSetupPage /></ProtectedRoute>} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
