@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      fx_rates: {
+        Row: {
+          base_rate: number
+          effective_rate: number | null
+          from_currency: string
+          id: string
+          spread_percent: number
+          to_currency: string
+          updated_at: string
+        }
+        Insert: {
+          base_rate: number
+          effective_rate?: number | null
+          from_currency: string
+          id?: string
+          spread_percent?: number
+          to_currency: string
+          updated_at?: string
+        }
+        Update: {
+          base_rate?: number
+          effective_rate?: number | null
+          from_currency?: string
+          id?: string
+          spread_percent?: number
+          to_currency?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
@@ -147,6 +177,60 @@ export type Database = {
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      virtual_cards: {
+        Row: {
+          amount_spent_month: number
+          brand: string
+          card_holder_name: string
+          card_number_last4: string
+          card_type: string
+          created_at: string
+          currency: string
+          expiry_month: number
+          expiry_year: number
+          id: string
+          metadata: Json | null
+          spending_limit: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_spent_month?: number
+          brand?: string
+          card_holder_name: string
+          card_number_last4: string
+          card_type?: string
+          created_at?: string
+          currency?: string
+          expiry_month: number
+          expiry_year: number
+          id?: string
+          metadata?: Json | null
+          spending_limit?: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_spent_month?: number
+          brand?: string
+          card_holder_name?: string
+          card_number_last4?: string
+          card_type?: string
+          created_at?: string
+          currency?: string
+          expiry_month?: number
+          expiry_year?: number
+          id?: string
+          metadata?: Json | null
+          spending_limit?: number
+          status?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
