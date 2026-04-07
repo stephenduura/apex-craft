@@ -1,9 +1,15 @@
+import { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import TransactionList from "@/components/TransactionList";
 import { motion } from "framer-motion";
 import { Search, Filter } from "lucide-react";
 
+const filters = ["All", "Credits", "Debits", "Conversions", "Cards"];
+
 const History = () => {
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [search, setSearch] = useState("");
+
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-lg mx-auto px-4 pt-6">
@@ -19,6 +25,8 @@ const History = () => {
             <input
               type="text"
               placeholder="Search transactions..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="bg-transparent outline-none text-sm font-body text-foreground placeholder:text-muted-foreground w-full"
             />
           </div>
@@ -27,13 +35,13 @@ const History = () => {
           </button>
         </motion.div>
 
-        {/* Filter chips */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
-          {["All", "Credits", "Debits", "Conversions", "Cards"].map((filter, i) => (
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-1 scrollbar-hide">
+          {filters.map((filter) => (
             <button
               key={filter}
+              onClick={() => setActiveFilter(filter)}
               className={`px-4 py-2 rounded-xl text-xs font-medium whitespace-nowrap font-body transition-colors ${
-                i === 0
+                activeFilter === filter
                   ? "bg-primary text-primary-foreground"
                   : "bg-card border border-border text-muted-foreground hover:text-foreground"
               }`}
@@ -43,7 +51,7 @@ const History = () => {
           ))}
         </div>
 
-        <TransactionList />
+        <TransactionList limit={50} showHeader={false} filter={activeFilter} />
       </div>
       <BottomNav />
     </div>
