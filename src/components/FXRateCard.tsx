@@ -1,7 +1,15 @@
 import { motion } from "framer-motion";
-import { ArrowLeftRight, TrendingUp } from "lucide-react";
+import { ArrowLeftRight, TrendingUp, TrendingDown } from "lucide-react";
+import { useFXRate } from "@/hooks/useFXRates";
+import { useNavigate } from "react-router-dom";
 
 const FXRateCard = () => {
+  const { rate, isLoading } = useFXRate("USD", "NGN");
+  const navigate = useNavigate();
+
+  const effectiveRate = rate?.effective_rate ?? 0;
+  const spread = rate?.spread_percent ?? 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -18,16 +26,29 @@ const FXRateCard = () => {
         </div>
         <div className="flex items-center gap-1 text-success">
           <TrendingUp className="w-3.5 h-3.5" />
-          <span className="text-xs font-medium">+0.2%</span>
+          <span className="text-xs font-medium">Live</span>
         </div>
       </div>
-      
+
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-2xl font-bold font-display text-foreground">₦1,580</p>
-          <p className="text-xs text-muted-foreground font-body mt-0.5">per $1 USD</p>
+          {isLoading ? (
+            <div className="h-8 w-24 bg-muted rounded animate-pulse" />
+          ) : (
+            <>
+              <p className="text-2xl font-bold font-display text-foreground">
+                ₦{Math.round(effectiveRate).toLocaleString()}
+              </p>
+              <p className="text-xs text-muted-foreground font-body mt-0.5">
+                per $1 USD • {spread}% spread
+              </p>
+            </>
+          )}
         </div>
-        <button className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors font-body">
+        <button
+          onClick={() => navigate("/convert")}
+          className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors font-body"
+        >
           Convert Now
         </button>
       </div>
