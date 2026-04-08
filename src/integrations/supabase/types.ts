@@ -44,6 +44,78 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          metadata: Json | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          metadata?: Json | null
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          metadata?: Json | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payment_links: {
+        Row: {
+          amount: number
+          created_at: string
+          creator_id: string
+          currency: string
+          description: string | null
+          expires_at: string | null
+          id: string
+          paid_at: string | null
+          recipient_id: string | null
+          status: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          creator_id: string
+          currency?: string
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          paid_at?: string | null
+          recipient_id?: string | null
+          status?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          creator_id?: string
+          currency?: string
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          paid_at?: string | null
+          recipient_id?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
