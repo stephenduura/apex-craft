@@ -18,6 +18,7 @@ import ResetPassword from "./pages/ResetPassword";
 import KYCVerification from "./pages/KYCVerification";
 import PinSetupPage from "./pages/PinSetupPage";
 import NotFound from "./pages/NotFound";
+import PayLink from "./pages/PayLink";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/pay/:linkId" element={<PayLink />} />
 
             {/* Protected routes */}
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
