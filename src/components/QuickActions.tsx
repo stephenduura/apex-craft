@@ -1,21 +1,23 @@
 import { motion } from "framer-motion";
-import { Plus, ArrowLeftRight, CreditCard, Bitcoin, Wallet, Send } from "lucide-react";
+import { Plus, ArrowLeftRight, CreditCard, Wallet, Send, Link2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface QuickActionsProps {
   onFund?: () => void;
   onWithdraw?: () => void;
+  onSend?: () => void;
+  onPaymentLink?: () => void;
 }
 
-const QuickActions = ({ onFund, onWithdraw }: QuickActionsProps) => {
+const QuickActions = ({ onFund, onWithdraw, onSend, onPaymentLink }: QuickActionsProps) => {
   const navigate = useNavigate();
 
   const actions = [
     { icon: Plus, label: "Fund", sublabel: "Add Money", color: "bg-primary text-primary-foreground", onClick: onFund },
     { icon: ArrowLeftRight, label: "Convert", sublabel: "₦ ↔ $", color: "bg-accent text-accent-foreground", onClick: () => navigate("/convert") },
     { icon: CreditCard, label: "Card", sublabel: "Virtual USD", color: "bg-success text-success-foreground", onClick: () => navigate("/cards") },
-    { icon: Send, label: "Send", sublabel: "Transfer", color: "bg-primary text-primary-foreground" },
-    { icon: Bitcoin, label: "Crypto", sublabel: "USDT Fund", color: "bg-accent text-accent-foreground" },
+    { icon: Send, label: "Send", sublabel: "Transfer", color: "bg-primary text-primary-foreground", onClick: onSend },
+    { icon: Link2, label: "Request", sublabel: "Pay Link", color: "bg-accent text-accent-foreground", onClick: onPaymentLink },
     { icon: Wallet, label: "Withdraw", sublabel: "Cash Out", color: "bg-success text-success-foreground", onClick: onWithdraw },
   ];
 

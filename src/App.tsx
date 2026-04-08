@@ -18,6 +18,7 @@ import ResetPassword from "./pages/ResetPassword";
 import KYCVerification from "./pages/KYCVerification";
 import PinSetupPage from "./pages/PinSetupPage";
 import NotFound from "./pages/NotFound";
+import PayLink from "./pages/PayLink";
 
 const queryClient = new QueryClient();
 
