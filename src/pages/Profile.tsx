@@ -1,6 +1,6 @@
 import BottomNav from "@/components/BottomNav";
 import { motion } from "framer-motion";
-import { Shield, ChevronRight, User, Lock, Bell, HelpCircle, LogOut, Fingerprint, FileCheck, KeyRound } from "lucide-react";
+import { Shield, ChevronRight, User, Lock, Bell, HelpCircle, LogOut, Fingerprint, FileCheck, KeyRound, Settings } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -14,9 +14,10 @@ const Profile = () => {
     { icon: User, label: "Personal Info", sublabel: "Name, email, phone", action: undefined },
     { icon: FileCheck, label: "KYC Verification", sublabel: profile?.kyc_status === 'verified' ? "BVN & NIN verified" : "Complete your verification", badge: profile?.kyc_status === 'verified' ? "Verified" : undefined, action: () => navigate('/kyc') },
     { icon: KeyRound, label: "Transaction PIN", sublabel: hasPinSet ? "PIN is active" : "Set up your PIN", badge: hasPinSet ? "Active" : "Setup", badgeVariant: hasPinSet ? 'success' : 'accent', action: () => navigate('/pin-setup') },
-    { icon: Lock, label: "Security", sublabel: "Password & 2FA", action: undefined },
-    { icon: Fingerprint, label: "Biometric Login", sublabel: "Face ID & fingerprint", action: undefined },
-    { icon: Bell, label: "Notifications", sublabel: "Alerts & preferences", action: undefined },
+    { icon: Fingerprint, label: "Biometric Login", sublabel: "Face ID & fingerprint", action: () => navigate('/settings') },
+    { icon: Settings, label: "Settings", sublabel: "Theme, currency, notifications", action: () => navigate('/settings') },
+    { icon: Lock, label: "Security", sublabel: "Password & 2FA", action: () => navigate('/settings') },
+    { icon: Bell, label: "Notifications", sublabel: "Alerts & preferences", action: () => navigate('/settings') },
     { icon: HelpCircle, label: "Help & Support", sublabel: "FAQs, contact us", action: undefined },
   ];
 
