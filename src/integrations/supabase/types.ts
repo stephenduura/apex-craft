@@ -253,6 +253,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_settings: {
+        Row: {
+          biometric_credential_id: string | null
+          biometric_public_key: string | null
+          created_at: string
+          dark_mode: boolean
+          default_currency: string
+          id: string
+          push_notifications_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          biometric_credential_id?: string | null
+          biometric_public_key?: string | null
+          created_at?: string
+          dark_mode?: boolean
+          default_currency?: string
+          id?: string
+          push_notifications_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          biometric_credential_id?: string | null
+          biometric_public_key?: string | null
+          created_at?: string
+          dark_mode?: boolean
+          default_currency?: string
+          id?: string
+          push_notifications_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       virtual_cards: {
         Row: {
           amount_spent_month: number
