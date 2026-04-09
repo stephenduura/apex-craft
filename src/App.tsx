@@ -21,6 +21,7 @@ import KYCVerification from "./pages/KYCVerification";
 import PinSetupPage from "./pages/PinSetupPage";
 import NotFound from "./pages/NotFound";
 import PayLink from "./pages/PayLink";
+import InstallPrompt from "./components/InstallPrompt";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const App = () => (
 
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <InstallPrompt />
         </AuthProvider>
         </ThemeProvider>
       </BrowserRouter>
