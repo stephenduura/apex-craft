@@ -21,6 +21,7 @@ import KYCVerification from "./pages/KYCVerification";
 import PinSetupPage from "./pages/PinSetupPage";
 import NotFound from "./pages/NotFound";
 import PayLink from "./pages/PayLink";
+import Assets from "./pages/Assets";
 import InstallPrompt from "./components/InstallPrompt";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
             <Route path="/convert" element={<ProtectedRoute><Convert /></ProtectedRoute>} />
             <Route path="/cards" element={<ProtectedRoute><Cards /></ProtectedRoute>} />
+            <Route path="/assets" element={<ProtectedRoute><Assets /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/kyc" element={<ProtectedRoute><KYCVerification /></ProtectedRoute>} />

@@ -4,7 +4,7 @@ import TransactionList from "@/components/TransactionList";
 import { motion } from "framer-motion";
 import { Search, Filter } from "lucide-react";
 
-const filters = ["All", "Credits", "Debits", "Conversions", "Cards"];
+const filters = ["All", "Credits", "Debits", "Conversions", "Cards", "Assets"];
 
 const History = () => {
   const [activeFilter, setActiveFilter] = useState("All");
