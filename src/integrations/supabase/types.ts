@@ -14,6 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
+      digital_asset_transactions: {
+        Row: {
+          amount: number
+          asset: string
+          created_at: string
+          fee_amount: number
+          id: string
+          metadata: Json | null
+          ngn_amount: number | null
+          rate_used: number | null
+          reference: string | null
+          status: string
+          type: string
+          user_id: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          asset: string
+          created_at?: string
+          fee_amount?: number
+          id?: string
+          metadata?: Json | null
+          ngn_amount?: number | null
+          rate_used?: number | null
+          reference?: string | null
+          status?: string
+          type: string
+          user_id: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          asset?: string
+          created_at?: string
+          fee_amount?: number
+          id?: string
+          metadata?: Json | null
+          ngn_amount?: number | null
+          rate_used?: number | null
+          reference?: string | null
+          status?: string
+          type?: string
+          user_id?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "digital_asset_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "digital_asset_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      digital_asset_wallets: {
+        Row: {
+          asset: string
+          balance: number
+          created_at: string
+          id: string
+          is_active: boolean
+          network: string
+          updated_at: string
+          user_id: string
+          wallet_address: string
+        }
+        Insert: {
+          asset: string
+          balance?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          network?: string
+          updated_at?: string
+          user_id: string
+          wallet_address?: string
+        }
+        Update: {
+          asset?: string
+          balance?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          network?: string
+          updated_at?: string
+          user_id?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       fx_rates: {
         Row: {
           base_rate: number
