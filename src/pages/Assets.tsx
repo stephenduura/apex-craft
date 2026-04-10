@@ -166,7 +166,7 @@ const Assets = () => {
                     onClick={() => { setSelectedWallet(null); setReceiveOpen(true); }}
                     className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium font-body"
                   >
-                    Receive Your First {"{"}Asset{"}"}
+                    Receive Your First Asset
                   </button>
                 </div>
               )}
