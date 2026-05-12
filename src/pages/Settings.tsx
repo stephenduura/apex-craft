@@ -10,6 +10,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { isWebAuthnSupported, isPlatformAuthenticatorAvailable, registerBiometric, verifyBiometric } from '@/lib/webauthn';
+import { subscribeToPush, unsubscribeFromPush, isPushSupported } from '@/lib/push';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -36,8 +37,26 @@ const Settings = () => {
   };
 
   const handleNotificationsToggle = (checked: boolean) => {
-    updateSettings.mutate({ push_notifications_enabled: checked });
-    toast({ title: checked ? 'Notifications enabled' : 'Notifications disabled' });
+    if (!user) return;
+    (async () => {
+      if (checked) {
+        if (!isPushSupported()) {
+          toast({ title: 'Push not supported', description: 'Your browser cannot receive push notifications.', variant: 'destructive' });
+          return;
+        }
+        const ok = await subscribeToPush(user.id);
+        if (!ok) {
+          toast({ title: 'Permission needed', description: 'Allow notifications in your browser to enable push.', variant: 'destructive' });
+          return;
+        }
+        updateSettings.mutate({ push_notifications_enabled: true });
+        toast({ title: 'Push notifications enabled' });
+      } else {
+        await unsubscribeFromPush();
+        updateSettings.mutate({ push_notifications_enabled: false });
+        toast({ title: 'Push notifications disabled' });
+      }
+    })();
   };
 
   const handleBiometricToggle = async (checked: boolean) => {
