@@ -34,7 +34,7 @@ export function useWallets() {
   useEffect(() => {
     if (!user) return;
     const channel = supabase
-      .channel('wallets-realtime')
+      .channel(`wallets-realtime-${user.id}-${Math.random().toString(36).slice(2)}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'wallets' }, () => {
         queryClient.invalidateQueries({ queryKey: ['wallets', user.id] });
       })
