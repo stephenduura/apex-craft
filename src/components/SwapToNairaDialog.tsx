@@ -94,6 +94,7 @@ const SwapToNairaDialog = ({ open, onClose, wallets }: SwapToNairaDialogProps) =
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <BiometricGate open={gateOpen} onOpenChange={setGateOpen} onVerified={handleSwap} title="Confirm swap" />
       <DialogContent className="max-w-sm rounded-2xl">
         <DialogHeader>
           <DialogTitle className="font-display">Swap to Naira</DialogTitle>
