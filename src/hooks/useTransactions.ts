@@ -39,7 +39,7 @@ export function useTransactions(limit = 20) {
   useEffect(() => {
     if (!user) return;
     const channel = supabase
-      .channel('transactions-realtime')
+      .channel(`transactions-realtime-${user.id}-${Math.random().toString(36).slice(2)}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'transactions' }, () => {
         queryClient.invalidateQueries({ queryKey: ['transactions'] });
         queryClient.invalidateQueries({ queryKey: ['wallets'] });
