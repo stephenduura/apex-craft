@@ -196,7 +196,7 @@ const SwapToNairaDialog = ({ open, onClose, wallets }: SwapToNairaDialogProps) =
 
           {/* Swap button */}
           <button
-            onClick={handleSwap}
+            onClick={requestSwap}
             disabled={loading || rateExpired || amountNum <= 0}
             className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground font-medium font-body text-sm disabled:opacity-50 transition-colors"
           >
