@@ -4,6 +4,7 @@ import { X, Send, Loader2, CheckCircle2, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import BiometricGate from "@/components/BiometricGate";
 
 interface SendMoneyDialogProps {
   open: boolean;
@@ -17,17 +18,23 @@ const SendMoneyDialog = ({ open, onClose }: SendMoneyDialogProps) => {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [gateOpen, setGateOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const symbol = currency === "USD" ? "$" : "₦";
   const presets = currency === "USD" ? [10, 25, 50, 100] : [1000, 5000, 10000, 50000];
 
-  const handleSend = async () => {
+  const requestSend = () => {
     const num = parseFloat(amount);
     if (!email || !num || num <= 0) {
       toast.error("Enter recipient email and valid amount");
       return;
     }
+    setGateOpen(true);
+  };
+
+  const handleSend = async () => {
+    const num = parseFloat(amount);
 
     setLoading(true);
     try {
@@ -63,6 +70,12 @@ const SendMoneyDialog = ({ open, onClose }: SendMoneyDialogProps) => {
 
   return (
     <AnimatePresence>
+      <BiometricGate
+        open={gateOpen}
+        onOpenChange={setGateOpen}
+        onVerified={handleSend}
+        title="Confirm transfer"
+      />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -168,7 +181,7 @@ const SendMoneyDialog = ({ open, onClose }: SendMoneyDialogProps) => {
               </div>
 
               <button
-                onClick={handleSend}
+                onClick={requestSend}
                 disabled={loading || !email || !amount}
                 className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold font-display text-base disabled:opacity-50 transition-all active:scale-[0.98]"
               >

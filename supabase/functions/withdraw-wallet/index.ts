@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
+import { createWithdrawIntent, flutterwaveEnabled } from "../_shared/providers/flutterwave.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -27,7 +28,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { currency, amount } = await req.json();
+    const { currency, amount, bankCode, accountNumber } = await req.json();
     if (!currency || !amount || typeof amount !== "number" || amount <= 0) {
       return new Response(JSON.stringify({ error: "Invalid amount or currency" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -55,6 +56,22 @@ Deno.serve(async (req) => {
       });
     }
 
+    const reference = `WDR-${Date.now()}`;
+    const intent = await createWithdrawIntent({
+      userId: user.id,
+      amount,
+      currency,
+      reference,
+      bankCode,
+      accountNumber,
+    });
+
+    if (intent.status === "failed") {
+      return new Response(JSON.stringify({ error: "Provider rejected withdrawal", raw: intent.raw }), {
+        status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const newBalance = parseFloat(wallet.balance) - amount;
 
     const { error: updateError } = await admin
@@ -69,16 +86,16 @@ Deno.serve(async (req) => {
       wallet_id: wallet.id,
       type: "withdraw",
       title: `${currency} Withdrawal`,
-      description: "Bank withdrawal",
+      description: flutterwaveEnabled() ? "Bank withdrawal (Flutterwave)" : "Simulated withdrawal",
       amount,
       currency,
-      status: "completed",
-      reference: `WDR-${Date.now()}`,
+      status: intent.status,
+      reference,
     });
 
     if (txError) throw txError;
 
-    return new Response(JSON.stringify({ success: true, balance: newBalance }), {
+    return new Response(JSON.stringify({ success: true, status: intent.status, balance: newBalance, reference }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {

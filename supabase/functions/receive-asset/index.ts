@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
+import { getOrCreateDepositAddress, fireblocksEnabled } from "../_shared/providers/fireblocks.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -72,13 +73,9 @@ Deno.serve(async (req) => {
       .single();
 
     if (!wallet) {
-      // Generate simulated wallet address
-      const prefix = network === "TRC20" ? "T" : "0x";
-      const chars = "abcdef0123456789";
-      let addr = prefix;
-      for (let i = 0; i < (network === "TRC20" ? 33 : 40); i++) {
-        addr += chars[Math.floor(Math.random() * chars.length)];
-      }
+      // Provider-issued deposit address (Fireblocks when keys present, simulated otherwise)
+      const dep = await getOrCreateDepositAddress(user.id, asset, network);
+      const addr = dep.address;
 
       const { data: newWallet, error: createError } = await admin
         .from("digital_asset_wallets")
@@ -100,9 +97,14 @@ Deno.serve(async (req) => {
       wallet = newWallet;
     }
 
-    // Credit wallet (simulated receive)
-    const newBalance = parseFloat(String(wallet.balance)) + amount;
-    await admin.from("digital_asset_wallets").update({ balance: newBalance }).eq("id", wallet.id);
+    // In a real Fireblocks integration, the wallet credit happens when the
+    // INCOMING_TRANSACTION webhook fires. Without keys we simulate the credit
+    // immediately so the dev experience stays smooth.
+    let newBalance = parseFloat(String(wallet.balance));
+    if (!fireblocksEnabled()) {
+      newBalance += amount;
+      await admin.from("digital_asset_wallets").update({ balance: newBalance }).eq("id", wallet.id);
+    }
 
     const ref = `RCV-${Date.now()}`;
 
@@ -112,11 +114,12 @@ Deno.serve(async (req) => {
       type: "receive",
       asset,
       amount,
-      status: "completed",
+      status: fireblocksEnabled() ? "pending" : "completed",
       reference: ref,
       metadata: {
         network,
         wallet_address: wallet.wallet_address,
+        provider: fireblocksEnabled() ? "fireblocks" : "simulated",
         timestamp: new Date().toISOString(),
       },
     });
