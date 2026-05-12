@@ -7,6 +7,7 @@ import { useFXRates } from "@/hooks/useFXRates";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import type { DigitalAssetWallet } from "@/hooks/useDigitalAssets";
+import BiometricGate from "@/components/BiometricGate";
 
 interface SwapToNairaDialogProps {
   open: boolean;
@@ -25,6 +26,7 @@ const SwapToNairaDialog = ({ open, onClose, wallets }: SwapToNairaDialogProps) =
   const [loading, setLoading] = useState(false);
   const [rateLockTimer, setRateLockTimer] = useState(RATE_LOCK_SECONDS);
   const [rateExpired, setRateExpired] = useState(false);
+  const [gateOpen, setGateOpen] = useState(false);
 
   const selectedWallet = wallets.find((w) => w.id === selectedWalletId);
   const asset = selectedWallet?.asset ?? "USDT";
@@ -60,10 +62,15 @@ const SwapToNairaDialog = ({ open, onClose, wallets }: SwapToNairaDialogProps) =
     setRateExpired(false);
   };
 
-  const handleSwap = async () => {
+  const requestSwap = () => {
     if (!selectedWallet || amountNum <= 0) { toast.error("Enter a valid amount"); return; }
     if (amountNum > selectedWallet.balance) { toast.error("Insufficient balance"); return; }
     if (rateExpired) { toast.error("Rate expired. Refresh to continue."); return; }
+    setGateOpen(true);
+  };
+
+  const handleSwap = async () => {
+    if (!selectedWallet) return;
 
     setLoading(true);
     try {
