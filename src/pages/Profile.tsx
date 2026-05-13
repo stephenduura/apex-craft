@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Shield, ChevronRight, User, Lock, Bell, HelpCircle, LogOut, Fingerprint, FileCheck, KeyRound, Settings } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import PageHeader from "@/components/PageHeader";
 
 const Profile = () => {
   const { user, profile, signOut } = useAuth();
@@ -29,7 +30,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-lg mx-auto px-4 pt-6">
-        <h1 className="text-2xl font-bold font-display text-foreground mb-6">Profile</h1>
+        <PageHeader title="Profile" subtitle="Account & security" to="/" />
 
         {/* Avatar section */}
         <motion.div

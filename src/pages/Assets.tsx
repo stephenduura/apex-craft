@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Shield, AlertTriangle, ArrowDownLeft, ArrowRightLeft, Coins } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import PageHeader from "@/components/PageHeader";
 
 const Assets = () => {
   const { user } = useAuth();
@@ -48,15 +49,7 @@ const Assets = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-lg mx-auto px-4 pt-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <Coins className="w-5 h-5 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold font-display text-foreground">Digital Assets</h1>
-            <p className="text-xs text-muted-foreground font-body">USDT & USDC Stablecoins</p>
-          </div>
-        </div>
+        <PageHeader title="Digital Assets" subtitle="USDT & USDC Stablecoins" to="/" />
 
         {/* Terms Modal */}
         <AnimatePresence>
