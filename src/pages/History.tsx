@@ -3,6 +3,7 @@ import BottomNav from "@/components/BottomNav";
 import TransactionList from "@/components/TransactionList";
 import { motion } from "framer-motion";
 import { Search, Filter } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
 
 const filters = ["All", "Credits", "Debits", "Conversions", "Cards", "Assets"];
 
@@ -13,7 +14,7 @@ const History = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-lg mx-auto px-4 pt-6">
-        <h1 className="text-2xl font-bold font-display text-foreground mb-6">Transaction History</h1>
+        <PageHeader title="Transaction History" subtitle="All your activity" to="/" />
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}

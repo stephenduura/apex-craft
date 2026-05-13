@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
+import { notifyUser } from "../_shared/notify.ts";
 
 const DAILY_SWAP_LIMIT = 10000; // $10,000 USD equivalent per day
 
@@ -178,13 +179,13 @@ Deno.serve(async (req) => {
       metadata: { swap_ref: ref, source_asset: asset, source_amount: amount },
     });
 
-    // Send notification
-    await admin.from("notifications").insert({
-      user_id: user.id,
-      title: "Swap Completed",
-      message: `Successfully swapped ${amount} ${asset} to ₦${ngnAmount.toLocaleString()}`,
+    await notifyUser(admin, {
+      userId: user.id,
       type: "transaction",
-      metadata: { reference: ref },
+      title: "Swap Completed",
+      body: `Swapped ${amount} ${asset} → ₦${ngnAmount.toLocaleString()}`,
+      url: "/history",
+      metadata: { reference: ref, asset, amount, ngn_amount: ngnAmount },
     });
 
     return new Response(JSON.stringify({

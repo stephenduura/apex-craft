@@ -4,6 +4,7 @@ import { X, ArrowDownLeft, ArrowUpRight, Loader2, CheckCircle2 } from "lucide-re
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import BiometricGate from "@/components/BiometricGate";
 
 interface FundWithdrawDialogProps {
   open: boolean;
@@ -17,6 +18,7 @@ const FundWithdrawDialog = ({ open, onClose, mode, currency = "NGN" }: FundWithd
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState(currency);
+  const [gateOpen, setGateOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const symbol = selectedCurrency === "USD" ? "$" : "₦";
@@ -26,13 +28,8 @@ const FundWithdrawDialog = ({ open, onClose, mode, currency = "NGN" }: FundWithd
     ? [50, 100, 250, 500, 1000]
     : [5000, 10000, 50000, 100000, 500000];
 
-  const handleSubmit = async () => {
+  const runSubmit = async () => {
     const numAmount = parseFloat(amount);
-    if (!numAmount || numAmount <= 0) {
-      toast.error("Enter a valid amount");
-      return;
-    }
-
     setLoading(true);
     try {
       const fn = isFund ? "fund-wallet" : "withdraw-wallet";
@@ -57,6 +54,17 @@ const FundWithdrawDialog = ({ open, onClose, mode, currency = "NGN" }: FundWithd
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = () => {
+    const numAmount = parseFloat(amount);
+    if (!numAmount || numAmount <= 0) {
+      toast.error("Enter a valid amount");
+      return;
+    }
+    if (isFund) return runSubmit();
+    // Withdrawals are sensitive — gate behind biometrics / PIN
+    setGateOpen(true);
   };
 
   const handleClose = () => {
@@ -184,6 +192,12 @@ const FundWithdrawDialog = ({ open, onClose, mode, currency = "NGN" }: FundWithd
           )}
         </motion.div>
       </motion.div>
+      <BiometricGate
+        open={gateOpen}
+        onOpenChange={setGateOpen}
+        onVerified={runSubmit}
+        title="Confirm withdrawal"
+      />
     </AnimatePresence>
   );
 };

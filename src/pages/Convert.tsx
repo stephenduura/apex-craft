@@ -1,4 +1,5 @@
 import BottomNav from "@/components/BottomNav";
+import PageHeader from "@/components/PageHeader";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeftRight, ArrowDown, Loader2, CheckCircle2, Clock, Info, Lock } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
@@ -97,7 +98,7 @@ const Convert = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-lg mx-auto px-4 pt-6">
-        <h1 className="text-2xl font-bold font-display text-foreground mb-6">Convert Currency</h1>
+        <PageHeader title="Convert Currency" subtitle="Swap between NGN and USD" to="/" />
 
         <AnimatePresence mode="wait">
           {success ? (

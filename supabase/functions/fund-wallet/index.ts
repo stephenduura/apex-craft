@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
 import { createFundIntent, flutterwaveEnabled } from "../_shared/providers/flutterwave.ts";
+import { notifyUser } from "../_shared/notify.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -109,6 +110,16 @@ Deno.serve(async (req) => {
     });
 
     if (txError) throw txError;
+
+    const sym = currency === "USD" ? "$" : "₦";
+    await notifyUser(admin, {
+      userId: user.id,
+      type: "transaction",
+      title: "Wallet Funded",
+      body: `Your ${currency} wallet was credited ${sym}${amount.toLocaleString()}.`,
+      url: "/history",
+      metadata: { reference, amount, currency },
+    });
 
     return new Response(JSON.stringify({ success: true, status: "completed", balance: newBalance, reference }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
