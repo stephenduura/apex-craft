@@ -2,10 +2,12 @@ import { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import VirtualCard from "@/components/VirtualCard";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Settings, Loader2, X, CreditCard, Snowflake, Play, Trash2, SlidersHorizontal } from "lucide-react";
+import { Plus, Settings, Loader2, X, CreditCard, Snowflake, Play, Trash2, SlidersHorizontal, Eye, EyeOff, Copy } from "lucide-react";
 import { useVirtualCards, useCreateCard, useUpdateCard } from "@/hooks/useVirtualCards";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import BiometricGate from "@/components/BiometricGate";
+import PageHeader from "@/components/PageHeader";
 
 const Cards = () => {
   const { profile } = useAuth();
@@ -18,6 +20,8 @@ const Cards = () => {
   const [spendingLimit, setSpendingLimit] = useState("5000");
   const [editingCard, setEditingCard] = useState<string | null>(null);
   const [newLimit, setNewLimit] = useState("");
+  const [revealedId, setRevealedId] = useState<string | null>(null);
+  const [pendingRevealId, setPendingRevealId] = useState<string | null>(null);
 
   const activeCards = cards?.filter(c => c.status !== "cancelled") ?? [];
   const totalSpent = activeCards.reduce((sum, c) => sum + c.amount_spent_month, 0);
@@ -74,9 +78,7 @@ const Cards = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-lg mx-auto px-4 pt-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold font-display text-foreground">Virtual Cards</h1>
-        </div>
+        <PageHeader title="Virtual Cards" subtitle="Manage your USD cards" to="/" />
 
         {isLoading ? (
           <div className="space-y-4">
@@ -142,12 +144,72 @@ const Cards = () => {
                       Limit
                     </button>
                     <button
+                      onClick={() => {
+                        if (revealedId === card.id) { setRevealedId(null); return; }
+                        setPendingRevealId(card.id);
+                      }}
+                      className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-muted text-muted-foreground hover:text-foreground text-xs font-medium font-body transition-colors"
+                    >
+                      {revealedId === card.id ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      {revealedId === card.id ? "Hide" : "Reveal"}
+                    </button>
+                    <button
                       onClick={() => handleCancel(card.id)}
                       className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-destructive/10 text-destructive text-xs font-medium font-body transition-colors hover:bg-destructive/20"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </motion.div>
+
+                  {/* Revealed sensitive details */}
+                  <AnimatePresence>
+                    {revealedId === card.id && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden mt-3"
+                      >
+                        <div className="p-4 rounded-2xl bg-card border border-border shadow-card space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-[10px] uppercase tracking-wider font-body text-muted-foreground">Card number</p>
+                              <p className="text-sm font-display tracking-[0.2em] text-foreground">
+                                {(card as any).metadata?.full_pan ?? `4532 •••• •••• ${card.card_number_last4}`}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => {
+                                const pan = (card as any).metadata?.full_pan ?? `4532••••••••${card.card_number_last4}`;
+                                navigator.clipboard.writeText(String(pan).replace(/\s/g, ""));
+                                toast.success("Card number copied");
+                              }}
+                              className="p-2 rounded-lg bg-muted text-muted-foreground hover:text-foreground"
+                            >
+                              <Copy className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <p className="text-[10px] uppercase tracking-wider font-body text-muted-foreground">Expiry</p>
+                              <p className="text-sm font-display text-foreground">
+                                {String(card.expiry_month).padStart(2, "0")}/{String(card.expiry_year).slice(-2)}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] uppercase tracking-wider font-body text-muted-foreground">CVV</p>
+                              <p className="text-sm font-display text-foreground">
+                                {(card as any).metadata?.cvv ?? "•••"}
+                              </p>
+                            </div>
+                          </div>
+                          <p className="text-[10px] text-muted-foreground font-body">
+                            Sensitive details are revealed only after biometric/PIN verification.
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   {/* Edit limit inline */}
                   <AnimatePresence>
@@ -314,6 +376,12 @@ const Cards = () => {
         </AnimatePresence>
       </div>
       <BottomNav />
+      <BiometricGate
+        open={!!pendingRevealId}
+        onOpenChange={(v) => { if (!v) setPendingRevealId(null); }}
+        onVerified={() => { setRevealedId(pendingRevealId); setPendingRevealId(null); }}
+        title="Reveal card details"
+      />
     </div>
   );
 };
