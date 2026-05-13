@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
+import { notifyUser } from "../_shared/notify.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -90,12 +91,12 @@ Deno.serve(async (req) => {
       // Update link
       await admin.from("payment_links").update({ status: "paid", recipient_id: user.id, paid_at: new Date().toISOString() }).eq("id", link_id);
 
-      // Notify creator
-      await admin.from("notifications").insert({
-        user_id: link.creator_id,
+      await notifyUser(admin, {
+        userId: link.creator_id,
         type: "payment",
         title: "Payment Received",
-        message: `${payerProfile?.full_name || "Someone"} paid your ${sym}${amount.toLocaleString()} link`,
+        body: `${payerProfile?.full_name || "Someone"} paid your ${sym}${amount.toLocaleString()} link`,
+        url: "/history",
         metadata: { amount, currency, link_id, payer_id: user.id },
       });
 

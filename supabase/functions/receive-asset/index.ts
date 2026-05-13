@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
 import { getOrCreateDepositAddress, fireblocksEnabled } from "../_shared/providers/fireblocks.ts";
+import { notifyUser } from "../_shared/notify.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -124,12 +125,13 @@ Deno.serve(async (req) => {
       },
     });
 
-    await admin.from("notifications").insert({
-      user_id: user.id,
-      title: `${asset} Received`,
-      message: `You received ${amount} ${asset} on ${network}`,
+    await notifyUser(admin, {
+      userId: user.id,
       type: "transaction",
-      metadata: { reference: ref },
+      title: `${asset} Received`,
+      body: `You received ${amount} ${asset} on ${network}`,
+      url: "/assets",
+      metadata: { reference: ref, asset, network, amount },
     });
 
     return new Response(JSON.stringify({

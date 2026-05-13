@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
+import { notifyUser } from "../_shared/notify.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -97,13 +98,24 @@ Deno.serve(async (req) => {
       metadata: { sender_email: user.email, sender_id: user.id },
     });
 
-    // Create notification for recipient
-    await admin.from("notifications").insert({
-      user_id: recipientProfile.user_id,
+    const sym = currency === "USD" ? "$" : "₦";
+    // Recipient: push + in-app
+    await notifyUser(admin, {
+      userId: recipientProfile.user_id,
       type: "transfer",
       title: "Money Received",
-      message: `${senderProfile?.full_name || user.email} sent you ${currency === "USD" ? "$" : "₦"}${amount.toLocaleString()}`,
+      body: `${senderProfile?.full_name || user.email} sent you ${sym}${amount.toLocaleString()}`,
+      url: "/history",
       metadata: { amount, currency, sender_id: user.id, reference: ref },
+    });
+    // Sender: push + in-app confirmation
+    await notifyUser(admin, {
+      userId: user.id,
+      type: "transfer",
+      title: "Transfer Sent",
+      body: `${sym}${amount.toLocaleString()} sent to ${recipientProfile.full_name || recipient_email}`,
+      url: "/history",
+      metadata: { amount, currency, recipient_id: recipientProfile.user_id, reference: ref },
     });
 
     return new Response(JSON.stringify({ success: true, reference: ref }), {
