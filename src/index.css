@@ -160,4 +160,9 @@
   .app-container {
     @apply mx-auto w-full max-w-md sm:max-w-2xl lg:max-w-5xl px-4 sm:px-6 lg:px-8;
   }
+
+  /* Narrower container for forms, lists, and settings-style pages */
+  .app-container-narrow {
+    @apply mx-auto w-full max-w-md sm:max-w-xl lg:max-w-2xl px-4 sm:px-6 lg:px-8;
+  }
 }
