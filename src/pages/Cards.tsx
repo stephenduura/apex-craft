@@ -111,7 +111,7 @@ const Cards = () => {
         ) : (
           <>
             {/* Card carousel */}
-            <div className="space-y-4">
+            <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
               {activeCards.map((card) => (
                 <div key={card.id}>
                   <VirtualCard
