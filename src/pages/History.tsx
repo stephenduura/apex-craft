@@ -13,7 +13,7 @@ const History = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28 lg:pb-12">
-      <div className="app-container pt-6">
+      <div className="app-container-narrow pt-6">
         <PageHeader title="Transaction History" subtitle="All your activity" to="/" />
 
         <motion.div

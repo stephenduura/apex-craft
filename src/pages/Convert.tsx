@@ -97,7 +97,7 @@ const Convert = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28 lg:pb-12">
-      <div className="app-container pt-6">
+      <div className="app-container-narrow pt-6">
         <PageHeader title="Convert Currency" subtitle="Swap between NGN and USD" to="/" />
 
         <AnimatePresence mode="wait">
