@@ -12,8 +12,8 @@ const History = () => {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <div className="max-w-lg mx-auto px-4 pt-6">
+    <div className="min-h-screen bg-background pb-28 lg:pb-12">
+      <div className="app-container pt-6">
         <PageHeader title="Transaction History" subtitle="All your activity" to="/" />
 
         <motion.div
