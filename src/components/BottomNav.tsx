@@ -14,8 +14,10 @@ const BottomNav = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl border-t border-border">
-      <div className="max-w-lg mx-auto flex items-center justify-around py-2 px-2">
+    <nav className="fixed z-50 bg-card/85 backdrop-blur-xl border border-border
+      bottom-0 left-0 right-0 border-t pb-safe
+      lg:bottom-6 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 lg:rounded-2xl lg:border lg:shadow-elevated lg:pb-0">
+      <div className="max-w-lg lg:max-w-none mx-auto flex items-center justify-around py-2 px-2 lg:px-4 lg:gap-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (

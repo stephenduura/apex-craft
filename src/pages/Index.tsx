@@ -31,33 +31,43 @@ const Index = () => {
   const openWithdraw = (currency: string) => { setDialogCurrency(currency); setWithdrawOpen(true); };
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <div className="max-w-lg mx-auto px-4">
+    <div className="min-h-screen bg-background pb-28 lg:pb-12">
+      <div className="app-container">
         <AppHeader />
 
-        <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="mt-4">
-          <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
-            <div className="snap-center">
-              <WalletCard currency="USD" balance={usdWallet?.balance ?? 0} symbol="$" label="USD Wallet" isLoading={isLoading} onFund={() => openFund("USD")} onWithdraw={() => openWithdraw("USD")} />
-            </div>
-            <div className="snap-center">
-              <WalletCard currency="NGN" balance={ngnWallet?.balance ?? 0} symbol="₦" label="Naira Wallet" isLoading={isLoading} onFund={() => openFund("NGN")} onWithdraw={() => openWithdraw("NGN")} />
-            </div>
+        {/* Two-column layout on desktop, stacked on mobile */}
+        <div className="mt-4 grid gap-6 lg:grid-cols-3 lg:gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
+              {/* Mobile: snap carousel. sm+: grid */}
+              <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:mx-0 sm:px-0">
+                <div className="snap-center sm:contents">
+                  <WalletCard currency="USD" balance={usdWallet?.balance ?? 0} symbol="$" label="USD Wallet" isLoading={isLoading} onFund={() => openFund("USD")} onWithdraw={() => openWithdraw("USD")} />
+                </div>
+                <div className="snap-center sm:contents">
+                  <WalletCard currency="NGN" balance={ngnWallet?.balance ?? 0} symbol="₦" label="Naira Wallet" isLoading={isLoading} onFund={() => openFund("NGN")} onWithdraw={() => openWithdraw("NGN")} />
+                </div>
+              </div>
+            </motion.section>
+
+            <section>
+              <h3 className="text-sm font-semibold font-display text-muted-foreground mb-3 uppercase tracking-wider">Quick Actions</h3>
+              <QuickActions
+                onFund={() => openFund("NGN")}
+                onWithdraw={() => openWithdraw("NGN")}
+                onSend={() => setSendOpen(true)}
+                onPaymentLink={() => setLinkOpen(true)}
+              />
+            </section>
+
+            <section className="lg:hidden"><FXRateCard /></section>
+            <section><TransactionList limit={5} /></section>
           </div>
-        </motion.section>
 
-        <section className="mt-6">
-          <h3 className="text-sm font-semibold font-display text-muted-foreground mb-3 uppercase tracking-wider">Quick Actions</h3>
-          <QuickActions
-            onFund={() => openFund("NGN")}
-            onWithdraw={() => openWithdraw("NGN")}
-            onSend={() => setSendOpen(true)}
-            onPaymentLink={() => setLinkOpen(true)}
-          />
-        </section>
-
-        <section className="mt-6"><FXRateCard /></section>
-        <section className="mt-6"><TransactionList limit={5} /></section>
+          <aside className="hidden lg:block space-y-6">
+            <FXRateCard />
+          </aside>
+        </div>
       </div>
 
       <BottomNav />

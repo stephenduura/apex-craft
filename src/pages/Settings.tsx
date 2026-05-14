@@ -114,8 +114,8 @@ const Settings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <div className="max-w-lg mx-auto px-4 pt-6">
+    <div className="min-h-screen bg-background pb-28 lg:pb-12">
+      <div className="app-container-narrow pt-6">
         <PageHeader title="Settings" subtitle="Theme, currency & security" />
 
         {/* Appearance Section */}

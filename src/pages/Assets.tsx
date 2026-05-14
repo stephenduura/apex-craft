@@ -47,8 +47,8 @@ const Assets = () => {
   const kycRequired = kycLevel < 1 || kycStatus !== "verified";
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <div className="max-w-lg mx-auto px-4 pt-6">
+    <div className="min-h-screen bg-background pb-28 lg:pb-12">
+      <div className="app-container pt-6">
         <PageHeader title="Digital Assets" subtitle="USDT & USDC Stablecoins" to="/" />
 
         {/* Terms Modal */}
