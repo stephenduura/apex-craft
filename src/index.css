@@ -138,4 +138,26 @@
   .gradient-success {
     background: var(--gradient-success);
   }
+
+  /* Hide scrollbars for horizontal carousels */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* iOS / Android safe-area helpers */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Shared responsive page container — mobile first, scales up gracefully */
+  .app-container {
+    @apply mx-auto w-full max-w-md sm:max-w-2xl lg:max-w-5xl px-4 sm:px-6 lg:px-8;
+  }
 }
