@@ -31,7 +31,7 @@ const QuickActions = ({ onFund, onWithdraw, onSend, onPaymentLink }: QuickAction
   };
 
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="grid grid-cols-3 gap-3">
+    <motion.div variants={container} initial="hidden" animate="show" className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-3 xl:grid-cols-6 gap-3">
       {actions.map((action) => (
         <motion.button
           key={action.label}
