@@ -21,7 +21,7 @@ const AssetWalletCard = ({ wallet, onReceive, onSwap }: AssetWalletCardProps) =>
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradientClass} p-5 text-white min-w-[280px] shadow-lg`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradientClass} p-5 text-white min-w-[280px] sm:min-w-0 sm:w-full shadow-lg`}
     >
       <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/5 -translate-y-8 translate-x-8" />
       <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/5 translate-y-6 -translate-x-6" />
