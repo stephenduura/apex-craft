@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
 import { notifyUser } from "../_shared/notify.ts";
+import { initiateLiquidation } from "../_shared/providers/fireblocks.ts";
 
 const DAILY_SWAP_LIMIT = 10000; // $10,000 USD equivalent per day
 
@@ -145,6 +146,40 @@ Deno.serve(async (req) => {
 
     const ref = `SWAP-${Date.now()}`;
 
+    // Initiate liquidation through the custodial provider (or internal treasury).
+    const settlement = await initiateLiquidation(asset, amount, ref);
+
+    const { data: settlementRow } = await admin
+      .from("swap_settlements")
+      .insert({
+        user_id: user.id,
+        swap_reference: ref,
+        asset,
+        amount,
+        ngn_amount: ngnAmount,
+        rate_used: effectiveRate,
+        provider: settlement.provider,
+        provider_tx_id: settlement.providerTxId,
+        hot_wallet_address: settlement.hotWalletAddress,
+        status: settlement.status,
+        error_message: settlement.error ?? null,
+        settled_at: settlement.status === "settled" ? new Date().toISOString() : null,
+        metadata: { fee_amount: fee, kyc_level: profile.kyc_level },
+      })
+      .select()
+      .single();
+
+    // Audit treasury outflow (assets leaving the OVO hot wallet pool).
+    await admin.from("treasury_movements").insert({
+      asset,
+      direction: "outflow",
+      amount,
+      related_settlement_id: settlementRow?.id ?? null,
+      provider: settlement.provider,
+      provider_tx_id: settlement.providerTxId,
+      notes: `Swap ${ref} liquidation`,
+    });
+
     // Create digital asset transaction
     await admin.from("digital_asset_transactions").insert({
       user_id: user.id,
@@ -162,6 +197,9 @@ Deno.serve(async (req) => {
         swap_direction: `${asset}_to_NGN`,
         daily_total: totalSwappedToday + amount,
         timestamp: new Date().toISOString(),
+        settlement_id: settlementRow?.id ?? null,
+        settlement_status: settlement.status,
+        settlement_provider: settlement.provider,
       },
     });
 
@@ -183,7 +221,9 @@ Deno.serve(async (req) => {
       userId: user.id,
       type: "transaction",
       title: "Swap Completed",
-      body: `Swapped ${amount} ${asset} → ₦${ngnAmount.toLocaleString()}`,
+      body: settlement.status === "settled"
+        ? `Swapped ${amount} ${asset} → ₦${ngnAmount.toLocaleString()}`
+        : `Swap of ${amount} ${asset} initiated. Settlement pending confirmation.`,
       url: "/history",
       metadata: { reference: ref, asset, amount, ngn_amount: ngnAmount },
     });
@@ -196,6 +236,11 @@ Deno.serve(async (req) => {
       rate: effectiveRate,
       fee,
       reference: ref,
+      settlement: {
+        provider: settlement.provider,
+        status: settlement.status,
+        provider_tx_id: settlement.providerTxId,
+      },
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
