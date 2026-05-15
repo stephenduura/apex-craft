@@ -307,6 +307,63 @@ export type Database = {
         }
         Relationships: []
       }
+      swap_settlements: {
+        Row: {
+          amount: number
+          asset: string
+          created_at: string
+          error_message: string | null
+          hot_wallet_address: string | null
+          id: string
+          metadata: Json | null
+          ngn_amount: number
+          provider: string
+          provider_tx_id: string | null
+          rate_used: number
+          settled_at: string | null
+          status: string
+          swap_reference: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          asset: string
+          created_at?: string
+          error_message?: string | null
+          hot_wallet_address?: string | null
+          id?: string
+          metadata?: Json | null
+          ngn_amount: number
+          provider?: string
+          provider_tx_id?: string | null
+          rate_used: number
+          settled_at?: string | null
+          status?: string
+          swap_reference: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          asset?: string
+          created_at?: string
+          error_message?: string | null
+          hot_wallet_address?: string | null
+          id?: string
+          metadata?: Json | null
+          ngn_amount?: number
+          provider?: string
+          provider_tx_id?: string | null
+          rate_used?: number
+          settled_at?: string | null
+          status?: string
+          swap_reference?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           amount: number
@@ -356,6 +413,50 @@ export type Database = {
             columns: ["wallet_id"]
             isOneToOne: false
             referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      treasury_movements: {
+        Row: {
+          amount: number
+          asset: string
+          created_at: string
+          direction: string
+          id: string
+          notes: string | null
+          provider: string
+          provider_tx_id: string | null
+          related_settlement_id: string | null
+        }
+        Insert: {
+          amount: number
+          asset: string
+          created_at?: string
+          direction: string
+          id?: string
+          notes?: string | null
+          provider?: string
+          provider_tx_id?: string | null
+          related_settlement_id?: string | null
+        }
+        Update: {
+          amount?: number
+          asset?: string
+          created_at?: string
+          direction?: string
+          id?: string
+          notes?: string | null
+          provider?: string
+          provider_tx_id?: string | null
+          related_settlement_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "treasury_movements_related_settlement_id_fkey"
+            columns: ["related_settlement_id"]
+            isOneToOne: false
+            referencedRelation: "swap_settlements"
             referencedColumns: ["id"]
           },
         ]
