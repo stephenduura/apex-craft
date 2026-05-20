@@ -22,7 +22,7 @@ const WalletCard = ({ currency, balance, symbol, label, trend, onFund, onWithdra
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative overflow-hidden rounded-2xl p-6 min-w-[280px] flex-shrink-0 sm:min-w-0 sm:w-full ${
+      className={`relative overflow-hidden rounded-2xl p-4 sm:p-6 w-full ${
         isUSD ? "gradient-navy shadow-wallet" : "bg-card shadow-card border border-border"
       }`}
     >
@@ -34,13 +34,13 @@ const WalletCard = ({ currency, balance, symbol, label, trend, onFund, onWithdra
       }`} />
 
       <div className="relative z-10">
-        <div className="flex items-center justify-between mb-6">
-          <span className={`text-sm font-medium font-body ${
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <span className={`text-xs sm:text-sm font-medium font-body truncate ${
             isUSD ? "text-primary-foreground/70" : "text-muted-foreground"
           }`}>{label}</span>
           <button
             onClick={() => setVisible(!visible)}
-            className={`p-1.5 rounded-lg transition-colors ${
+            className={`p-1.5 rounded-lg transition-colors flex-shrink-0 ${
               isUSD ? "hover:bg-primary-foreground/10 text-primary-foreground/60" : "hover:bg-muted text-muted-foreground"
             }`}
           >
@@ -48,11 +48,11 @@ const WalletCard = ({ currency, balance, symbol, label, trend, onFund, onWithdra
           </button>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
           {isLoading ? (
             <div className="h-9 w-36 rounded-lg bg-muted/30 animate-pulse" />
           ) : (
-            <p className={`text-3xl font-bold font-display tracking-tight ${
+            <p className={`text-xl sm:text-3xl font-bold font-display tracking-tight break-all ${
               isUSD ? "text-primary-foreground" : "text-foreground"
             }`}>
               {visible ? `${symbol}${balance.toLocaleString("en-US", { minimumFractionDigits: 2 })}` : "••••••"}
@@ -70,27 +70,27 @@ const WalletCard = ({ currency, balance, symbol, label, trend, onFund, onWithdra
           )}
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-1.5 sm:gap-2">
           <button
             onClick={onFund}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+            className={`flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-medium transition-all flex-1 ${
               isUSD
                 ? "bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground"
                 : "bg-primary hover:bg-primary/90 text-primary-foreground"
             }`}
           >
-            <ArrowDownLeft className="w-3.5 h-3.5" />
+            <ArrowDownLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             Fund
           </button>
           <button
             onClick={onWithdraw}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+            className={`flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-medium transition-all flex-1 ${
               isUSD
                 ? "bg-accent/20 hover:bg-accent/30 text-primary-foreground"
                 : "bg-accent/10 hover:bg-accent/20 text-accent"
             }`}
           >
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             Withdraw
           </button>
         </div>
