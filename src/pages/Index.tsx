@@ -40,13 +40,9 @@ const Index = () => {
           <div className="lg:col-span-2 space-y-6">
             <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
               {/* Mobile: snap carousel. sm+: grid */}
-              <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:mx-0 sm:px-0">
-                <div className="snap-center sm:contents">
-                  <WalletCard currency="USD" balance={usdWallet?.balance ?? 0} symbol="$" label="USD Wallet" isLoading={isLoading} onFund={() => openFund("USD")} onWithdraw={() => openWithdraw("USD")} />
-                </div>
-                <div className="snap-center sm:contents">
-                  <WalletCard currency="NGN" balance={ngnWallet?.balance ?? 0} symbol="₦" label="Naira Wallet" isLoading={isLoading} onFund={() => openFund("NGN")} onWithdraw={() => openWithdraw("NGN")} />
-                </div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <WalletCard currency="USD" balance={usdWallet?.balance ?? 0} symbol="$" label="USD Wallet" isLoading={isLoading} onFund={() => openFund("USD")} onWithdraw={() => openWithdraw("USD")} />
+                <WalletCard currency="NGN" balance={ngnWallet?.balance ?? 0} symbol="₦" label="Naira Wallet" isLoading={isLoading} onFund={() => openFund("NGN")} onWithdraw={() => openWithdraw("NGN")} />
               </div>
             </motion.section>
 
